@@ -1,0 +1,82 @@
+
+
+IP: 100.26.134.14
+PORT: 2200
+
+
+update all software  via:
+1.	sudo apt-get update
+2.	sudo apt-get udgrade
+
+updated firewall setting via:
+1.	sudo ufw default deny incoming
+2.	sudo ufw allow outgoing
+3.	sudo ufw allow 2200/tcp
+4.	sudo ufw allow www
+5.	sudo ufw allow ntp
+6.	sudoe ufw enable
+
+create a new user (grader) & gave them root access:
+1.	sudo adduser grader
+2.	sudo nano /etc/sudoers.d/grader
+
+created ssh authentcation locally on my PC for grader:
+1.	ssh-keygen- via Git
+2.	copied the contents of the grader.pub file on my PC to my server 
+3.	placed under mkdir .ssh/authorized keys
+4.	set permission:  chmod 700 on .ssh & chmod 644 on .ssh/authorized_keys
+5.	logged into server via ssh grader@"ip address"-p2200 
+6.	Diabled root login in via:  /etc/ssh/sshd_config
+7.	updated to UTC timezone via: sudo dpkg-reconfigure tzdata
+
+installed and config postgreSQL:
+1.	sudo apt-get install libapache2-mod-wsgi-py3
+2.	disable remote access to DB: sudo nano /etc/postgresql/9.5/main/pg_hba.conf
+3.	created a new Database called catalog: sudo su - postgres, psql, create database catalog; ,create user catalog;
+4.	alter role catalog with password 'catalog'
+5.	grant all privileges on database catalog To catalog;
+
+clone my git instance onto my server
+1.	naviagate to /var/www
+2.	mkdir catalog
+3.	cd catalog
+4.	mkdir catalog
+5.	cd catalog
+6.	git clone https://github.com/ybisrat1/finalproject2.1.git
+7.	change final_project2.1.py file to init.py
+8.	update create engine to point to postgressql
+
+configure  virtual host/env on server
+1.	sudo nano /etc/apache2/sites-available/catalog.conf
+	<virtualHost *:80>
+                ServerName 100.26.134.14
+                ServerAdmin ybisrat1@gmail.com
+                WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+                <Directory /var/www/catalog/catalog/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+                Alias /static /var/www/catalog/catalog/static
+                <Directory /var/www/catalog/catalog/static/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                LogLevel warn
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	</VirtualHost>
+
+2. created th catalog.wsgi script
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/catalog/")
+
+from catalog import app as application
+application.secret_key = 'super_secret_key'
+
+3.  Sudo service apache2 restart
+4. curl localhost 
+
