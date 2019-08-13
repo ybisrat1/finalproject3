@@ -1,8 +1,25 @@
 
+ssh grader@100.26.134.14  -i ~/.ssh/project3 -p 2200
 
 IP: 100.26.134.14
+
 PORT: 2200
 
+The complete URL to your hosted web application:
+http://ybisrat1.com.100.26.134.14.xip.io/
+
+iii. A summary of software you installed and configuration changes made.
+software installed:
+1.	Python
+2.	Apache2
+3.	PIP
+4.	mod_wsgi
+5.	SQL_alchemy
+6.	FLASK
+7.	psycopg2
+8.	httplib2
+9.	PostgreSQL
+10.	Git
 
 update all software  via:
 1.	sudo apt-get update
@@ -15,7 +32,6 @@ updated firewall setting via:
 4.	sudo ufw allow www
 5.	sudo ufw allow ntp
 6.	sudoe ufw enable
-
 create a new user (grader) & gave them root access:
 1.	sudo adduser grader
 2.	sudo nano /etc/sudoers.d/grader
@@ -28,6 +44,7 @@ created ssh authentcation locally on my PC for grader:
 5.	logged into server via ssh grader@"ip address"-p2200 
 6.	Diabled root login in via:  /etc/ssh/sshd_config
 7.	updated to UTC timezone via: sudo dpkg-reconfigure tzdata
+
 
 installed and config postgreSQL:
 1.	sudo apt-get install libapache2-mod-wsgi-py3
@@ -79,4 +96,8 @@ application.secret_key = 'super_secret_key'
 
 3.  Sudo service apache2 restart
 4. curl localhost 
+5. update google oauth provider/redirect link with xip.io DNS
+
+thirdparty articles:
+1. https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 
